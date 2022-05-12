@@ -1,23 +1,37 @@
-import logo from './logo.svg';
+import {useState, useEffect} from 'react';
+import {BrowserRouter, Routes, Route} from 'react-router-dom';
+import Home from './components/Home';
+import Navbar from './components/Navbar';
+import ProductList from './components/ProductList';
 import './App.css';
+import {Outlet} from 'react-router-dom';
+import Pruducts from './components/Products'
 
-function App() {
+const App=()=> {
+
+  const [allProducts, setAllProducts] =useState ([]);
+  const getAllProducts=()=>{
+
+    fetch('https://fakestoreapi.com/products')
+            .then(res=>res.json())
+            // .then(json=>console.log(json))
+           .then(json=>setAllProducts(json))
+  };
+
+    useEffect(()=>{
+      getAllProducts()
+      
+  },[]);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <BrowserRouter>
+        <Navbar/>
+        <Routes>
+          <Route path="/" exact element ={<Home/>}/>
+          <Route path="/products" exact element={<ProductList allProducts={allProducts}/>}/>
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
